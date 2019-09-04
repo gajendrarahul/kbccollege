@@ -1,0 +1,28 @@
+{% extends 'base/master.html'%}
+{% block 'title' %} who are you  {%  endblock %}
+{% block 'body' %}
+
+
+<h1> i am gajendra kumar mahato i am in who  dashboard </h1>
+
+
+<div calss="container">
+    <div class=" col-md- col-md-offset-3" style="margin-top:20px;padding:30px;">
+        <div class="box">
+            <h3>who are  you ??</h3>
+            <hr/>
+            <div class="whobtn" style="margin-let:20px:">
+                <a href="{% url 'create' %}" class="btn btn-primary">i am jobseeker</a>
+                <a href="{% url 'create_company' %}" class="btn btn-primary">i am company</a>
+
+            </div>
+        </div>
+
+
+
+    </div>
+
+</div>
+{%  endblock %}
+
+
