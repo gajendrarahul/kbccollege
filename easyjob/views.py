@@ -1,12 +1,13 @@
-from django.shortcuts import render,redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import signupForm
-from jobseeker.models import Jobseeker
+from jobseeker.models import Jobseeker,Project,Skill
 from company.models import Comapany
-
+from django.contrib.auth.models import User
+from jobseeker.form import JobseekerProjectForm,skillForm
 def signup(request):
     if request.method == 'GET':
         context = {
@@ -32,11 +33,11 @@ def signin(request):
         user = authenticate(username=u, password=p)
         if user is not None:
             login(request, user)
-            id= request.user.id
+            id = request.user.id
             x = checkcompanyorjobseemker(id)
-            if x==1:
+            if x == 1:
                 return redirect('dashboard')
-            elif x==2:
+            elif x == 2:
                 return redirect('company_dashboard')
             else:
                 return  redirect('who')
@@ -48,7 +49,31 @@ def signin(request):
 
 @login_required(login_url='signin')
 def dashboard(request):
-    return render(request, 'dashboard.html')
+    if request.method == "GET":
+        a = User.objects.get(id=request.user.id)
+        b = Jobseeker.objects.get(user_id=request.user.id)
+        project = Project.objects.filter(Jobseeker_id=b.id)[::-1]
+        skill =Skill.objects.filter(jobseeker_id=b.id)
+        context = {
+            'user': a,
+            'jobseeker': b,
+            'jobseeker_project_form': JobseekerProjectForm(),
+            'project': project,
+            'sform': skillForm(),
+            'skill': skill,
+
+        }
+        return render(request, 'dashboard.html', context)
+    else:
+        form = JobseekerProjectForm(request.POST)
+        if form.is_valid():
+            data = form.save(commit=False)
+            a = Jobseeker.objects.get(user_id=request.user.id)
+            data.jobseeker_id = a.id
+            data.save()
+            return redirect('dashboard')
+        else:
+            return redirect('dashboard')
 
 def signout(request):
     logout(request)
@@ -60,14 +85,16 @@ def who(request):
 
 def checkcompanyorjobseemker(id):
     try:
-        a= Jobseeker.object.get(user_id=id)
+        a = Jobseeker.objects.get(user_id=id)
         return 1
     except:
         try:
-            c=Comapany.object.get(user_id=id)
+            c = Comapany.objects.get(user_id=id)
             return 2
         except:
             return 3
+
+
 
 
 

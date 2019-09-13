@@ -1,9 +1,107 @@
-{% extends 'base/master.html'%}
+{% extends 'base/master.html' %}
+{% load staticfiles %}
 {% block 'title' %}  dashboard   {%  endblock %}
 {% block 'body' %}
 
+<div class="container">
+    <div class="col-md-4">
+        <div class="box">
+            <img src="{{MEDIA_URL}}{{jobseeker.profile.url}}" class="profile">
+        </div>
+        <div class="box">
+            <h3>{{ user.first_name }} {{user.last_name }}</h3>
+            <h5>{{jobseeker.professional_title}}</h5>
+            <hr>
+            <a href="#"><i class="fa fa-globe"> {{jobseeker.url}}</i> </a>
+            <br>
+            <a href="#"><i class="fa fa-mobile"></i>  {{jobseeker.contact_number}}</a>
+            <p> {{jobseeker.address}}</p>
+            {% if jobseeker.gender == 'male' %}
+            <a href="#"><i class="fa fa-mars"></i> Male </a>
+            {% elif jobseeker.gender == 'female' %}
+            <a href="#"><i class="fa fa-venus"></i> Female </a>
+            {% else %}
+            <a href="#"><i class="fa fa-transgender"></i> Other </a>
+            {% endif %}
+            &nbsp;&nbsp;<a href="#"><i class="fa fa-calendar"> {{jobseeker.experience_year}} </i></a>&nbsp;&nbsp;<a href="#"><i class="fa fa-university"></i> {{jobseeker.qualification}}</a>
+        </div>
 
-<h1> i am gajendra kumar mahato</h1>
-{%  endblock %}
+         <div class="box">
+             <h4>my skill</h4>
+             <a href="#" style="float:right;" data-toggle="modal" data-target="#create_skill"><i class="fa fa-plus"></i> </a>
+             {% for s in skill %}
+             <span class="skill" data-toggle="tooltip" data-placement="top" title="{{s.proffecency_level}}" style="border:1px solid blue;padding:10px;border-radius:10px;background-color:blue;"><b>{{s.skill_title}} <a href="{% url 'skill_delete'  s.id %}" style="font-weight:bold;">x</a></b></span>
+             {% endfor %}
+        </div>
+    </div>
 
+    <div class="col-md-8">
+            <div class="box">
+                <h3>About myself</h3>
+                {{jobseeker.description}}
+            </div>
+        <br>
+        <div class="box">
+            <a href="#" style="float:right;" data-toggle="modal" data-target="#create_project"><i class="fa fa-plus"></i> </a>
+            <table class="table">
+                <th>Project name</th>
+                <th>description</th>
+                <th>Action</th>
+                {% for p in project %}
+                <tr>
+                    <td>{{p.title}}</td>
+                    <td>{{p.description}}</td>
+                    <td>Del | Edit </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
 
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="create_project" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <form method="post" action="{% url 'dashboard' %}">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Add New Project</h4>
+      </div>
+      <div class="modal-body">
+          {% csrf_token %}
+         {{jobseeker_project_form}}
+           </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+        </form>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal fade" id="create_skill" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <form method="post" action="{% url 'skill_store' %}">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel33">Add New skill</h4>
+      </div>
+      <div class="modal-body">
+          {% csrf_token %}
+          {{sform}}
+           </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+        </form>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

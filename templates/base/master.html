@@ -35,6 +35,7 @@
 	<link rel="stylesheet" href="{% static 'css/theme.css' %}">
 	<link rel="stylesheet" href="{% static 'css/theme-elements.css' %}">
 	<link rel="stylesheet" href="{% static 'css/animate.min.css' %}">
+	<link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 
 	<!-- Head Libs -->
@@ -333,6 +334,11 @@
 		});
 	});
 	</script>
+<script>
+	$(function () {
+	  $('[data-toggle="tooltip"]').tooltip()
+	})
+</script>
 
 </body>
 </html>

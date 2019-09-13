@@ -14,7 +14,7 @@ class Jobseeker(models.Model):
     description = models.TextField(null=True, blank=True, help_text="About yourself")
     url = models.URLField(blank=True, null=True, unique=True)
     gender = models.CharField(max_length=100, choices=gender)
-    qualification = models.CharField(max_length=100, help_text="your higest degree here")
+    qualification = models.CharField(max_length=100, help_text="your highest degree here")
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -26,7 +26,7 @@ class Skill(models.Model):
     jobseeker = models.ForeignKey(Jobseeker, on_delete=models.CASCADE)
 
     def __str__(self):
-        return  self.skill_title
+        return self.skill_title
 
 class Experience(models.Model):
     company = models.CharField(max_length=100)
